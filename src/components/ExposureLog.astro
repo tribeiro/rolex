@@ -1,0 +1,85 @@
+---
+import type { IExposureLog, ILogEntry } from '../types.js';
+import Show from './Show.astro';
+
+interface Props {
+	exposure_log: ILogEntry;
+}
+
+const { exposure_log } = Astro.props;
+
+const exposure_log_labels: {[key: string]: string} = {
+none: '',
+good: '\u{2705}',
+questionable: '\u{2757}',
+junk: '\u{274C}',
+narrative: '\u{1F4C3}',
+};
+---
+
+<li>
+	<span class="score">
+		<p>
+			{exposure_log_labels[exposure_log.flag]}
+		</p>
+	</span>
+	<span class="title">
+		<!-- <Show when={exposure_log.obs_id}> -->
+		<Show when={exposure_log.day_obs}>
+			<a>
+				{exposure_log.instrument}{' '}{exposure_log.day_obs}{' '}{exposure_log.seq_num}{' :: '}	
+			</a>
+		</Show>
+		<Show when={exposure_log.is_human}>
+			<a>
+				{exposure_log.message_text ? exposure_log.message_text : "Empty message."}
+			</a>
+		</Show>
+	</span>
+	<br />
+	<span class="meta">
+		<Show when={exposure_log.is_human}>
+			by {exposure_log.user_id}{' '}
+			{exposure_log.date_added}{' '}
+		</Show>
+	</span>
+</li>
+
+<style>
+	li {
+		background-color: rgb(248 250 252);
+		padding: 20px 30px 20px 80px;
+		border-bottom: 1px solid #eee;
+		position: relative;
+		line-height: 20px;
+	}
+
+	.score {
+		color: rgb(88 28 135);
+		font-size: 1.1em;
+		font-weight: 700;
+		position: absolute;
+		top: 50%;
+		left: 0;
+		width: 80px;
+		text-align: center;
+		margin-top: -10px;
+	}
+
+	.host,
+	.meta {
+		font-size: 0.85em;
+		color: rgb(51 65 85);
+	}
+
+	.host a,
+	.meta a {
+		color: rgb(51 65 85);
+		text-decoration: underline;
+	}
+
+	.host a:hover,
+	.meta a:hover {
+		color: #335d92;
+	}
+</style>

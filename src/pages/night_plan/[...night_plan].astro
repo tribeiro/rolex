@@ -1,0 +1,77 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+---
+
+<Layout>
+	<section>
+		<nav aria-labelledby="current-page">
+			Select a date to explore: 
+			<input type="date" id="start" name="log_date" onchange="this.form.submit()" disabled="true" title="Not implemented yet."/>
+			<!-- {' or go '}
+			<button title="Click to enable live logging." name="live">Live</button> -->
+			{' Maximum number of entries: '}
+			<select name="limit" id="limit" disabled="true" title="Not implemented yet.">
+				<option value="unlimited" selected="unlimited">unlimited</option>
+				<option value=10>10</option>
+				<option value=100>100</option>
+				<option value=200>200</option>
+				<option value=500>500</option>
+			</select>
+		</nav>
+		<main>
+            This is a sample night plan.
+		</main>
+	</section>
+</Layout>
+
+<style>
+	section {
+		padding-top: 45px;
+	}
+
+	nav,
+	main {
+		background-color: rgb(248 250 252);
+		border-radius: 2px;
+		text-align: center;
+	}
+
+	nav {
+		padding: 15px 30px;
+		position: fixed;
+		text-align: center;
+		top: 55px;
+		left: 0;
+		right: 0;
+		z-index: 998;
+		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+	}
+
+	nav a {
+		margin: 0 1em;
+	}
+
+	[aria-disabled='true'] {
+		color: rgb(71 85 105);
+		margin: 0 1em;
+	}
+
+	main {
+		position: absolute;
+		margin: 30px 0;
+		width: 100%;
+	}
+
+	ul {
+		list-style-type: none;
+		padding: 0;
+		margin: 0;
+	}
+
+	@media (max-width: 600px) {
+		main {
+			margin: 10px 0;
+		}
+	}
+</style>

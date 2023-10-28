@@ -1,7 +1,7 @@
 const story = (path: string) => `https://node-hnapi.herokuapp.com/${path}`;
 const user = (path: string) => `https://hacker-news.firebaseio.com/v0/${path}.json`;
-const exposure_log = () => `http://summit-lsp.lsst.codes/exposurelog/messages?order_by=-date_added&limit=10`;
-const narrative_log = () => `http://summit-lsp.lsst.codes/narrativelog/messages?order_by=-date_added&limit=10`;
+const exposure_log = (startDate: string, endDate: string) => `http://summit-lsp.lsst.codes/exposurelog/messages?order_by=-date_added&min_date_added=${startDate}&max_date_added=${endDate}`;
+const narrative_log = (startDate: string, endDate: string) => `http://summit-lsp.lsst.codes/narrativelog/messages?order_by=-date_added&min_date_added=${startDate}&max_date_added=${endDate}`;
 
 export default async function fetchAPI(path: string) {
 	const url = path.startsWith('user') ? user(path) : story(path);
@@ -25,11 +25,11 @@ export default async function fetchAPI(path: string) {
 	}
 }
 
-export async function fetchExposureLog() {
+export async function fetchExposureLog(startDate: string, endDate: string) {
 	const headers = { 'User-Agent': 'chrome' };
 
 	try {
-		let response = await fetch(exposure_log(), { headers });
+		let response = await fetch(exposure_log(startDate, endDate), { headers });
 		let text = await response.text();
 		try {
 			if (text === null) {
@@ -49,11 +49,11 @@ export async function fetchExposureLog() {
 	}
 }
 
-export async function fetchNarrativeLog() {
+export async function fetchNarrativeLog(startDate: string, endDate: string) {
 	const headers = { 'User-Agent': 'chrome' };
 
 	try {
-		let response = await fetch(narrative_log(), { headers });
+		let response = await fetch(narrative_log(startDate, endDate), { headers });
 		let text = await response.text();
 		try {
 			if (text === null) {

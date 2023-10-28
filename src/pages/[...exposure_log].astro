@@ -6,42 +6,58 @@ import Layout from '../layouts/Layout.astro';
 import {fetchExposureLog, fetchNarrativeLog} from '../lib/api.js';
 import type { IExposureLog, INarrativeLog, ILogEntry } from '../types.js';
 
-const exposure_logs = (await fetchExposureLog() as IExposureLog[]);
-const narrative_logs = (await fetchNarrativeLog() as INarrativeLog[]);
+const searchParams = Astro.url.searchParams;
+
+const dateSelected = searchParams.get("log_date");
 
 type LogEntryTuple = {date_added: string, log_entry: ILogEntry};
 
 let log_entries_tuples: LogEntryTuple[] = [];
 
-exposure_logs.forEach( exposure_log => {
-	log_entries_tuples.push( {date_added: exposure_log.date_added, log_entry: {
-		date_added: exposure_log.date_added,
-		day_obs: exposure_log.day_obs,
-		flag: exposure_log.exposure_flag,
-		instrument: exposure_log.instrument,
-		is_human: exposure_log.is_human,
-		message_text: exposure_log.message_text,
-		obs_id: exposure_log.obs_id,
-		seq_num: exposure_log.seq_num,
-		user_id: exposure_log.user_id,
-	}} );
-}
-);
+if (searchParams.has("log_date")) {
 
-narrative_logs.forEach( narrative_log => {
-	log_entries_tuples.push({date_added: narrative_log.date_added, log_entry: {
-		date_added: narrative_log.date_added,
-		day_obs: null,
-		flag: "narrative",
-		instrument: null,
-		is_human: narrative_log.is_human,
-		message_text: narrative_log.message_text,
-		obs_id: null,
-		seq_num: null,
-		user_id: narrative_log.user_id,
-	}});	
+	console.log(searchParams.get("log_date"));
+	
+	let startDate: string = searchParams.get("log_date") + "T00:00:00.000000";
+	let endDate: string = searchParams.get("log_date") + "T23:59:59.999999";
+
+	console.log(startDate);
+	console.log(endDate);
+
+	const exposure_logs = (await fetchExposureLog(startDate, endDate) as IExposureLog[]);
+	const narrative_logs = (await fetchNarrativeLog(startDate, endDate) as INarrativeLog[]);
+	
+	exposure_logs.forEach( exposure_log => {
+		log_entries_tuples.push( {date_added: exposure_log.date_added, log_entry: {
+			date_added: exposure_log.date_added,
+			day_obs: exposure_log.day_obs,
+			flag: exposure_log.exposure_flag,
+			instrument: exposure_log.instrument,
+			is_human: exposure_log.is_human,
+			message_text: exposure_log.message_text,
+			obs_id: exposure_log.obs_id,
+			seq_num: exposure_log.seq_num,
+			user_id: exposure_log.user_id,
+		}} );
+	}
+	);
+	
+	narrative_logs.forEach( narrative_log => {
+		log_entries_tuples.push({date_added: narrative_log.date_added, log_entry: {
+			date_added: narrative_log.date_added,
+			day_obs: null,
+			flag: "narrative",
+			instrument: null,
+			is_human: narrative_log.is_human,
+			message_text: narrative_log.message_text,
+			obs_id: null,
+			seq_num: null,
+			user_id: narrative_log.user_id,
+		}});		
+	}
+	);
 }
-);
+
 
 log_entries_tuples.sort((a, b) => b.date_added.localeCompare(a.date_added));
 
@@ -52,24 +68,32 @@ const log_entries: ILogEntry[] = log_entries_tuples.map(log_entry => log_entry.l
 <Layout>
 	<section>
 		<nav aria-labelledby="current-page">
-			Select a date to explore: 
-			<input type="date" id="start" name="log_date" onchange="this.form.submit()" disabled="true" title="Not implemented yet."/>
-			<!-- {' or go '}
-			<button title="Click to enable live logging." name="live">Live</button> -->
-			{' Maximum number of entries: '}
-			<select name="limit" id="limit" disabled="true" title="Not implemented yet.">
-				<option value="unlimited" selected="unlimited">unlimited</option>
-				<option value=10>10</option>
-				<option value=100>100</option>
-				<option value=200>200</option>
-				<option value=500>500</option>
-			</select>
+			<form>
+				Select a date to explore: 
+				<input type="date" id="start" name="log_date" onchange="this.form.submit()" title="Select date to show log messages."/>
+				<!-- {' or go '}
+					<button title="Click to enable live logging." name="live">Live</button> -->
+				{' Maximum number of entries: '}
+				<select name="limit" id="limit" disabled="true" title="Not implemented yet.">
+					<option value="unlimited" selected="unlimited">unlimited</option>
+					<option value=10>10</option>
+					<option value=100>100</option>
+					<option value=200>200</option>
+					<option value=500>500</option>
+				</select>
+			</form>
 		</nav>
 		<main>
 			<Show when={log_entries}>
 				<ul>
 					<For each={log_entries}>{(log_entries: ILogEntry) => <ExposureLog exposure_log={log_entries} />}</For>
 				</ul>
+			</Show>
+			<Show when={log_entries.length == 0 && dateSelected}>
+				{ 'No log messages for ' } {dateSelected}
+			</Show>
+			<Show when={dateSelected === null}>
+				{ 'Select date to show log messages.' }
 			</Show>
 		</main>
 	</section>

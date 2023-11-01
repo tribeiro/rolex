@@ -72,7 +72,7 @@ const log_entries: ILogEntry[] = log_entries_tuples.map(log_entry => log_entry.l
 		<nav aria-labelledby="current-page">
 			<form>
 				Select a date to explore: 
-				<input type="date" id="start" name="log_date" onchange="this.form.submit()" title="Select date to show log messages."/>
+				<input type="date" value={dateSelected} id="start" name="log_date" onchange="this.form.submit()" title="Select date to show log messages."/>
 				<!-- {' or go '}
 					<button title="Click to enable live logging." name="live">Live</button> -->
 				{' Maximum number of entries: '}

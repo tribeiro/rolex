@@ -82,4 +82,5 @@ export interface ILogEntry {
 	obs_id: string | null;
 	seq_num: number | null;
 	user_id: string;
+	urls: string[];
 }

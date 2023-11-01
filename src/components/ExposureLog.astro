@@ -1,4 +1,5 @@
 ---
+import For from '../components/For.astro';
 import type { ILogEntry } from '../types.js';
 import Show from './Show.astro';
 
@@ -7,6 +8,16 @@ interface Props {
 }
 
 const { exposure_log } = Astro.props;
+
+let attached_images_url: string[] = [];
+let attached_images_width: number = 256;
+
+exposure_log.urls.forEach(url => {
+	if (url.endsWith("jpeg")) {
+		attached_images_url.push(url);
+	}
+}
+)
 
 const exposure_log_labels: {[key: string]: string} = {
 none: '',
@@ -36,6 +47,10 @@ narrative: '\u{1F4C3}',
 			</a>
 		</Show>
 	</span>
+	<br />
+	<Show when={attached_images_url.length > 0}>
+		<For each={attached_images_url}>{(attached_images_url: string) => <img src={attached_images_url} alt="Attached image." width={attached_images_width}>}</For>
+	</Show>	
 	<br />
 	<span class="meta">
 		<Show when={exposure_log.is_human}>

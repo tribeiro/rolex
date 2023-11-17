@@ -25,8 +25,14 @@ if (searchParams.has("log_date")) {
 
 	const exposure_logs = (await fetchExposureLog(startDate, endDate) as IExposureLog[]);
 	const narrative_logs = (await fetchNarrativeLog(startDate, endDate) as INarrativeLog[]);
-	
+	const rubintv_url = "https://storage.googleapis.com/rubintv_data/auxtel_monitor/auxtel-monitor_dayObs_"
+
 	exposure_logs.forEach( exposure_log => {
+		let YYYY = Math.round(exposure_log.day_obs/10000);
+		let MM = Math.round((exposure_log.day_obs-YYYY*10000)/100);
+		let DD = Math.round((exposure_log.day_obs-YYYY*10000-MM*100));
+		let image_url = rubintv_url + YYYY + "-" + MM + "-" + DD + "_seqNum_" + exposure_log.seq_num + ".png";
+		exposure_log.urls.push(image_url);
 		log_entries_tuples.push( {date_added: exposure_log.date_added, log_entry: {
 			date_added: exposure_log.date_added,
 			day_obs: exposure_log.day_obs,

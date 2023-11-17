@@ -1,0 +1,92 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { fetchNarrativeLogFromId } from '../../lib/api';
+import type { INarrativeLog } from '../../types';
+import Show from "../../components/Show.astro";
+import For from "../../components/For.astro";
+
+const { item } = Astro.params;
+
+const narrative_log = (await fetchNarrativeLogFromId(item) as INarrativeLog);
+---
+
+<Layout>
+	<main>
+		<span class="title">
+				<a>
+					{narrative_log.message_text ? narrative_log.message_text : "Empty message."}
+				</a>
+		</span>
+		<br />
+		<Show when={narrative_log.urls.length > 0}>
+			{'Links:'}
+			<ul>
+				<For each={narrative_log.urls}>{(url: string) => <li><a href={url}>{url}</a></li>}</For>
+			</ul>
+
+		</Show>	
+		<br />
+		<span class="meta">
+			<Show when={narrative_log.is_human}>
+				by {narrative_log.user_id}{' '}
+				{narrative_log.date_added}{' '}
+			</Show>
+		</span>
+		</main>
+</Layout>
+
+<style>
+	section {
+		padding-top: 45px;
+	}
+
+	nav,
+	main {
+		background-color: rgb(248 250 252);
+		border-radius: 2px;
+		text-align: center;
+	}
+
+	nav {
+		padding: 15px 30px;
+		position: fixed;
+		text-align: center;
+		top: 55px;
+		left: 0;
+		right: 0;
+		z-index: 998;
+		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+	}
+
+	nav a {
+		margin: 0 1em;
+	}
+
+	[aria-disabled='true'] {
+		color: rgb(71 85 105);
+		margin: 0 1em;
+	}
+
+	main {
+		position: absolute;
+		margin: 30px 0;
+		width: 100%;
+	}
+
+	ul {
+		list-style-type: none;
+		padding: 0;
+		margin: 0;
+	}
+
+	.meta {
+		font-size: 0.85em;
+		color: rgb(51 65 85);
+	}
+
+	@media (max-width: 600px) {
+		main {
+			margin: 10px 0;
+		}
+	}
+</style>

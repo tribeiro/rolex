@@ -83,4 +83,6 @@ export interface ILogEntry {
 	seq_num: number | null;
 	user_id: string;
 	urls: string[];
+	id: string;
+	is_exposure: boolean;
 }

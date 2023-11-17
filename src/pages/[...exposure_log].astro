@@ -5,6 +5,7 @@ import ExposureLog from '../components/ExposureLog.astro';
 import Layout from '../layouts/Layout.astro';
 import {fetchExposureLog, fetchNarrativeLog} from '../lib/api.js';
 import type { IExposureLog, INarrativeLog, ILogEntry } from '../types.js';
+import dayjs from "dayjs";
 
 const searchParams = Astro.url.searchParams;
 
@@ -16,11 +17,9 @@ let log_entries_tuples: LogEntryTuple[] = [];
 
 if (searchParams.has("log_date")) {
 
-	console.log(searchParams.get("log_date"));
+	let endDate: string = searchParams.get("log_date") + "T12:00:00";
+	let startDate: string = dayjs(endDate).subtract(1, "day").format("YYYY-MM-DDTHH:mm:ss");
 	
-	let startDate: string = searchParams.get("log_date") + "T00:00:00.000000";
-	let endDate: string = searchParams.get("log_date") + "T23:59:59.999999";
-
 	console.log(startDate);
 	console.log(endDate);
 
@@ -39,6 +38,8 @@ if (searchParams.has("log_date")) {
 			seq_num: exposure_log.seq_num,
 			user_id: exposure_log.user_id,
 			urls: exposure_log.urls,
+			id: exposure_log.id,
+			is_exposure: true,
 		}} );
 	}
 	);
@@ -55,6 +56,8 @@ if (searchParams.has("log_date")) {
 			seq_num: null,
 			user_id: narrative_log.user_id,
 			urls: narrative_log.urls,
+			id: narrative_log.id,
+			is_exposure: false,
 		}});		
 	}
 	);

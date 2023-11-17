@@ -8,7 +8,7 @@ interface Props {
 }
 
 const { exposure_log } = Astro.props;
-
+const item: string =  (exposure_log.is_exposure ? "/exposure_log/" : "narrative_log/") + exposure_log.id;
 let attached_images_url: string[] = [];
 let attached_images_width: number = 256;
 
@@ -20,9 +20,9 @@ exposure_log.urls.forEach(url => {
 )
 
 const exposure_log_labels: {[key: string]: string} = {
-none: '',
+none: '\u{1F4CE}',
 good: '\u{2705}',
-questionable: '\u{2757}',
+questionable: '\u{2753}', 
 junk: '\u{274C}',
 narrative: '\u{1F4C3}',
 };
@@ -31,7 +31,9 @@ narrative: '\u{1F4C3}',
 <li>
 	<span class="score">
 		<p>
-			{exposure_log_labels[exposure_log.flag]}
+			<a href={item} title="Drill down.">
+				{exposure_log_labels[exposure_log.flag]}
+			</a>
 		</p>
 	</span>
 	<span class="title">
@@ -67,6 +69,10 @@ narrative: '\u{1F4C3}',
 		border-bottom: 1px solid #eee;
 		position: relative;
 		line-height: 20px;
+	}
+
+	li:hover {
+		background-color: rgb(235, 236, 239);
 	}
 
 	.score {

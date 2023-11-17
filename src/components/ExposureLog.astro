@@ -13,7 +13,7 @@ let attached_images_url: string[] = [];
 let attached_images_width: number = 256;
 
 exposure_log.urls.forEach(url => {
-	if (url.endsWith("jpeg")) {
+	if (url.endsWith(".jpeg") || url.endsWith(".jpg") || url.endsWith(".png")) {
 		attached_images_url.push(url);
 	}
 }

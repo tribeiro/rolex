@@ -3,7 +3,7 @@ import For from '../components/For.astro';
 import Show from '../components/Show.astro';
 import ExposureLog from '../components/ExposureLog.astro';
 import Layout from '../layouts/Layout.astro';
-import {fetchExposureLog, fetchNarrativeLog} from '../lib/api.js';
+import {fetchExposureLog, fetchNarrativeLog, jiraMarkdownToHtml} from '../lib/api.js';
 import type { IExposureLog, INarrativeLog, ILogEntry } from '../types.js';
 import dayjs from "dayjs";
 
@@ -39,7 +39,7 @@ if (searchParams.has("log_date")) {
 			flag: exposure_log.exposure_flag,
 			instrument: exposure_log.instrument,
 			is_human: exposure_log.is_human,
-			message_text: exposure_log.message_text,
+			message_text: jiraMarkdownToHtml(exposure_log.message_text),
 			obs_id: exposure_log.obs_id,
 			seq_num: exposure_log.seq_num,
 			user_id: exposure_log.user_id,
@@ -57,7 +57,7 @@ if (searchParams.has("log_date")) {
 			flag: "narrative",
 			instrument: null,
 			is_human: narrative_log.is_human,
-			message_text: narrative_log.message_text,
+			message_text: jiraMarkdownToHtml(narrative_log.message_text),
 			obs_id: null,
 			seq_num: null,
 			user_id: narrative_log.user_id,

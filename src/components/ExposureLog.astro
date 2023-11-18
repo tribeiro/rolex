@@ -45,7 +45,7 @@ narrative: '\u{1F4C3}',
 		</Show>
 		<Show when={exposure_log.is_human}>
 			<a>
-				{exposure_log.message_text ? exposure_log.message_text : "Empty message."}
+				<wikiMarkupText set:html={exposure_log.message_text ? exposure_log.message_text : "Empty message."} />
 			</a>
 		</Show>
 	</span>
@@ -71,6 +71,10 @@ narrative: '\u{1F4C3}',
 		line-height: 20px;
 	}
 
+	p {
+		text-align: justify;
+	}
+	
 	li:hover {
 		background-color: rgb(235, 236, 239);
 	}
@@ -103,4 +107,30 @@ narrative: '\u{1F4C3}',
 	.meta a:hover {
 		color: #335d92;
 	}
+
+	.wikiMarkupText {
+		white-space: pre-wrap;
+		text-align: left;
+		overflow-x: auto;
+		max-width: 70em;
+	}
+
+	.wikiMarkupText h1,
+	.wikiMarkupText h2,
+	.wikiMarkupText h3,
+	.wikiMarkupText h4,
+	.wikiMarkupText h5,
+	.wikiMarkupText h6 {
+	margin: calc(var(--small-padding) * 0.5) 0;
+	}
+
+	.wikiMarkupText a {
+	color: var(--link-font-color);
+	}
+
+	.wikiMarkupText a:hover,
+	.wikiMarkupText a:focus {
+		color: var(--link-hover-font-color);
+	}
+
 </style>

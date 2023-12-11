@@ -1,7 +1,7 @@
 const story = (path: string) => `https://node-hnapi.herokuapp.com/${path}`;
 const user = (path: string) => `https://hacker-news.firebaseio.com/v0/${path}.json`;
-const exposure_log = (startDate: string, endDate: string) => `http://summit-lsp.lsst.codes/exposurelog/messages?order_by=-date_added&min_date_added=${startDate}&max_date_added=${endDate}`;
-const narrative_log = (startDate: string, endDate: string) => `http://summit-lsp.lsst.codes/narrativelog/messages?order_by=-date_added&min_date_added=${startDate}&max_date_added=${endDate}`;
+const exposure_log = (startDate: string, endDate: string) => `http://summit-lsp.lsst.codes/exposurelog/messages?order_by=-date_added&min_date_added=${startDate}&max_date_added=${endDate}&limit=10000`;
+const narrative_log = (startDate: string, endDate: string) => `http://summit-lsp.lsst.codes/narrativelog/messages?order_by=-date_added&min_date_added=${startDate}&max_date_added=${endDate}&limit=100000`;
 const narrative_log_id = (id: string) => `http://summit-lsp.lsst.codes/narrativelog/messages/${id}`;
 
 export default async function fetchAPI(path: string) {

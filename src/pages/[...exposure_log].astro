@@ -17,8 +17,8 @@ let log_entries_tuples: LogEntryTuple[] = [];
 
 if (searchParams.has("log_date")) {
 
-	let endDate: string = searchParams.get("log_date") + "T12:00:00";
-	let startDate: string = dayjs(endDate).subtract(1, "day").format("YYYY-MM-DDTHH:mm:ss");
+	let startDate: string = searchParams.get("log_date") + "T12:00:00";
+	let endDate: string = dayjs(startDate).add(1, "day").format("YYYY-MM-DDTHH:mm:ss");
 	
 	console.log(startDate);
 	console.log(endDate);
